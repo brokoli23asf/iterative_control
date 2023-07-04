@@ -1,0 +1,29 @@
+-- available online in file 'examp3'
+DECLARE
+   salary         emp.sal%TYPE := 0;
+   mgr_num        emp.mgr%TYPE;
+   last_name      emp.ename%TYPE;
+   starting_empno emp.empno%TYPE := 7499;
+BEGIN
+   SELECT mgr INTO mgr_num FROM emp 
+      WHERE empno = starting_empno;
+   WHILE salary <= 2500 LOOP
+      SELECT sal, mgr, ename INTO salary, mgr_num, last_name
+         FROM emp WHERE empno = mgr_num;
+   END LOOP;
+   INSERT INTO temp VALUES (NULL, salary, last_name);
+   COMMIT;
+EXCEPTION
+   WHEN NO_DATA_FOUND THEN
+      INSERT INTO temp VALUES (NULL, NULL, 'Not found');
+      COMMIT;
+END;
+
+The EXIT-WHEN statement lets you complete a loop if further processing is impossible or undesirable. When the EXIT statement is encountered, the condition in the WHEN clause is evaluated. If the condition is true, the loop completes and control passes to the next statement. In the following example, the loop completes when the value of total exceeds 25,000:
+
+LOOP
+   ...
+   total := total + salary;
+   EXIT WHEN total > 25000;  -- exit loop if condition is true
+END LOOP;
+-- control resumes here
